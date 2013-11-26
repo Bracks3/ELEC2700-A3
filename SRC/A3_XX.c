@@ -5,7 +5,12 @@
         Author:         Josh Brackenbury and Michael Dobbins
         Date:           06-06-13
 
-        Description:
+        Description:    A program simulating the functionality of an mp3 player, written to be run on an 8051.
+        		
+        		Functions (e.g. play/pause/volume) can be accessed through pressing buttons 1-4 
+        		Songs can be uploaded/downloaded through the interface 
+        
+        		
         
 
         Notes:          
