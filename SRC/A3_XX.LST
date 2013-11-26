@@ -1,0 +1,2117 @@
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 1   
+
+
+C51 COMPILER V9.06, COMPILATION OF MODULE A3_XX
+OBJECT MODULE PLACED IN A3_XX.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\c51.exe A3_XX.c DB OE BR INCDIR(C:\SiLabs\MCU\Inc)
+
+line level    source
+
+   1          /*________________________________________________________________________________________________________
+             -_____________
+   2          
+   3                  Project:        ELEC2700 Assignment 3 template
+   4                  Module:         A3_XX.c
+   5                  Author:         Josh Brackenbury and Michael Dobbins
+   6                  Date:           06-06-13
+   7          
+   8                  Description:
+   9                  
+  10          
+  11                  Notes:          
+  12          
+  13                  Revisions:
+  14          
+  15                          Status: Working
+  16          
+  17          
+  18          __________________________________________________________________________________________________________
+             -_____________*/
+  19          
+  20          #include <c8051f120.h>     // SFR declarations
+  21          #include "A3_XX.h"
+  22          #include <stdlib.h>     /* srand, rand */
+  23          #include <stdio.h>          //string info
+  24          #include <string.h>
+  25                  
+  26          
+  27          /*--------------------------------------------------------------------------------------------------------
+             -------------
+  28                  Function:         Main
+  29          
+  30                  Description:      Main routine
+  31          
+  32                  Revisions:
+  33          
+  34          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+  35          void main(void)
+  36          {
+  37   1                      
+  38   1              
+  39   1              
+  40   1              unsigned var,c;
+  41   1              General_Init();
+  42   1              Volume = 0x3F;                  // Nominal volume value
+  43   1              LED7 = 1;               // LED 1   
+  44   1              LED8 = 1;               // LED 2
+  45   1              LED9 = 0;               // LED 3
+  46   1              LED10 = 0;                              // LED 4
+  47   1              var = 0;
+  48   1      
+  49   1              //Intro Message for JPod(Innovation)
+  50   1      
+  51   1              /* SSD for jP */
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 2   
+
+  52   1              TRIG = 1;
+  53   1              P2 = 0xE1;
+  54   1              TRIG = 0;
+  55   1              P2 = 0x8C;
+  56   1              Delay(145);
+  57   1              /* SSD for Po */
+  58   1              TRIG = 1;
+  59   1              P2 = 0x8C;
+  60   1              TRIG = 0;
+  61   1              P2 = 0xA3;
+  62   1              Delay(145);
+  63   1              /* SSD for oD */
+  64   1              TRIG = 1;
+  65   1              P2 = 0xA3;
+  66   1              TRIG = 0;
+  67   1              P2 = 0xA1;
+  68   1              Delay(145);
+  69   1              /* SSD for "D " */
+  70   1              TRIG = 1;
+  71   1              P2 = 0xA1;
+  72   1              TRIG = 0;
+  73   1              P2 = 0xFF;
+  74   1              Delay(145);
+  75   1              /* SSD for " " */
+  76   1              TRIG = 1;
+  77   1              P2 = 0xFF;
+  78   1              TRIG = 0;
+  79   1              P2 = 0xFF;
+  80   1              Delay(290);
+  81   1                      
+  82   1              State(1); 
+  83   1      }
+*** WARNING C280 IN LINE 40 OF A3_XX.c: 'c': unreferenced local variable
+  84          /*--------------------------------------------------------------------------------------------------------
+             -------------
+  85                  Function:         State 
+  86          
+  87                  Description:      State switch
+  88          
+  89                  Revisions:        Added new states as they were created
+  90          
+  91          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+  92          void State(int i)
+  93          {
+  94   1              // State switch selector
+  95   1              switch( i ) 
+  96   1              {       
+  97   2          case 0:
+  98   2                      Play(); //  move to play state
+  99   2              break;
+ 100   2          case 1:
+ 101   2                      Stop();  //  move to stop state
+ 102   2              break;
+ 103   2          case 2:
+ 104   2                      Pause();  //  move to pause state
+ 105   2              break;
+ 106   2              }
+ 107   1      
+ 108   1      }
+ 109          /*--------------------------------------------------------------------------------------------------------
+             -------------
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 3   
+
+ 110                  Function:         Play
+ 111          
+ 112                  Description:      Play State
+ 113                  Revisions:        
+ 114          
+ 115          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+ 116          void Play()
+ 117          {
+ 118   1              int shuffle = 0;
+ 119   1              while (1)
+ 120   1              {
+ 121   2                      strcpy(str, "                                ");
+ 122   2                      if (shuffle == 1)
+ 123   2                              selection = RandomNum();
+ 124   2                      switch( selection ) 
+ 125   2                      {       
+ 126   3                              case 0:
+ 127   3                                      strcpy(str, "Mary Had A Little Lamb"); // string for SSD 
+ 128   3                                      PlayInit();
+ 129   3                                      Mary_Had_A_Little_Lamb();
+ 130   3                              break;
+ 131   3                          case 1:
+ 132   3                                      strcpy(str, "Twinkle Twinkle Little Star");// string for SSD 
+ 133   3                                      PlayInit();
+ 134   3                                      Twinkle_Twinkle_Little_Star();
+ 135   3                              break;
+ 136   3                          case 2:
+ 137   3                                      strcpy(str, "Flintstones");// string for SSD 
+ 138   3                                      PlayInit();
+ 139   3                                      Flintstones();
+ 140   3                              break;
+ 141   3                              case 3:
+ 142   3                                      strcpy(str, "Saregama");// string for SSD 
+ 143   3                                      PlayInit();
+ 144   3                                      Saregama();
+ 145   3                                      break;
+ 146   3                              case 4:
+ 147   3                                      strcpy(str, "Beethoven");// string for SSD 
+ 148   3                                      PlayInit();
+ 149   3                                      BeethovenPlay();
+ 150   3                                      break;
+ 151   3                              case 5:
+ 152   3                                      strcpy(str, "Adams Family");// string for SSD 
+ 153   3                                      PlayInit();
+ 154   3                                      AdamsFamily();
+ 155   3                                      break;
+ 156   3                              case 6: // SHUFFLE INNOVATION
+ 157   3                                      // randomly select song
+ 158   3                                      if (shuffle == 0)
+ 159   3                                      {
+ 160   4                                              shuffle = 1; // turn shuffle on
+ 161   4                                              // SSD "Shuffle"                        
+ 162   4                                              TRIG = 1;
+ 163   4                                              P2 = SSS; // First letter for scrolling
+ 164   4                                              TRIG = 0;
+ 165   4                                              P2 = SSh;
+ 166   4                                              Delay(290);
+ 167   4                                      }
+ 168   3                                      else if (shuffle == 1)
+ 169   3                                              shuffle = 0;
+ 170   3                                      break;
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 4   
+
+ 171   3                      }
+ 172   2                      if (selection == 5)
+ 173   2                              selection = 0;
+ 174   2                      else
+ 175   2                              selection++;
+ 176   2              }
+ 177   1      
+ 178   1      }
+ 179                                  
+ 180          /*--------------------------------------------------------------------------------------------------------
+             -------------
+ 181                  Function:         Stop
+ 182          
+ 183                  Description:      Stop State
+ 184                  Revisions:        
+ 185          
+ 186          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+ 187          
+ 188          
+ 189          void Stop()
+ 190          {
+ 191   1              j=0;
+ 192   1              Letter1 = 0xFF;
+ 193   1              TRIG = 1;
+ 194   1              P2 =  Letter1;
+ 195   1              LetterCheckSSD(j); // First letter for scrolling
+ 196   1              TRIG = 0;
+ 197   1              P2 = Letter2;
+ 198   1              Delay(90);
+ 199   1                      
+ 200   1              while(1)
+ 201   1              {
+ 202   2      
+ 203   2                      if(S1 == 0 && S4 == 0 ) // if both s1 and s4 are pressed
+ 204   2                      {       
+ 205   3                              button_debounce();
+ 206   3                              Computer_Interface(); // Launch the computer interface
+ 207   3                      }
+ 208   2                      if(S2 == 0 && S3 == 0 ) // if both s2 and s3 are pressed
+ 209   2                      {       
+ 210   3                              button_debounce();
+ 211   3                              selection = 6;
+ 212   3                              strcpy(str, "Shuffle");
+ 213   3                              State(0);
+ 214   3                      }
+ 215   2                      if(S1 == 0)
+ 216   2                      {       
+ 217   3                              button_debounce();      // temp button debounce 
+ 218   3                              VolumeControl(1); /* volume down */
+ 219   3                      }
+ 220   2                      if(S2 == 0)
+ 221   2                      {       
+ 222   3                              button_debounce();                      
+ 223   3                              VolumeControl(0); /* volume up */
+ 224   3                      }
+ 225   2                      if(S3 == 0)
+ 226   2                      {               
+ 227   3                              button_debounce();              
+ 228   3                              State(0); /* Play */
+ 229   3                      }
+ 230   2                      if(S4 == 0) // Change song
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 5   
+
+ 231   2                      {       
+ 232   3                              button_debounce();
+ 233   3                              selection++;
+ 234   3                              j=0;
+ 235   3                              Letter1 = 0xFF;
+ 236   3      
+ 237   3                                      if (selection > 5) // if you have reached the end of the song list
+ 238   3                                      {
+ 239   4                                              selection = 0; // go back to the start of the song list
+ 240   4                                      }
+ 241   3                              
+ 242   3                                      if (selection == 0) 
+ 243   3                                      {
+ 244   4                                                      strcpy(str, "Mary Had A Little Lamb");
+ 245   4                                      }
+ 246   3                                      if (selection == 1) 
+ 247   3                                      {
+ 248   4                                                      strcpy(str, "Twinkle Twinkle Little Star");
+ 249   4                                      }
+ 250   3                                      if (selection == 2) 
+ 251   3                                      {
+ 252   4                                                      strcpy(str, "Flintstones");
+ 253   4                                      
+ 254   4                                      }
+ 255   3                                      if (selection == 3) 
+ 256   3                                      {
+ 257   4                                                      strcpy(str, "Saregama");
+ 258   4                                      
+ 259   4                                      }
+ 260   3                                      if (selection == 4) 
+ 261   3                                      {
+ 262   4                                                      strcpy(str, "Beethoven");
+ 263   4                                      
+ 264   4                                      }
+ 265   3                                      if (selection == 5) 
+ 266   3                                      {
+ 267   4                                                      strcpy(str, "Adams Family");
+ 268   4                                      
+ 269   4                                      }
+ 270   3                                      
+ 271   3      
+ 272   3                      }
+ 273   2              
+ 274   2                                              
+ 275   2              
+ 276   2                                      
+ 277   2                 /* SSD for Song Titles */
+ 278   2                       // local variable
+ 279   2                      
+ 280   2                      arrayLengthnum = strlen(str); // Checks lenght of array str
+ 281   2                      LetterCheckSSD(j);
+ 282   2                      if (j < arrayLengthnum)
+ 283   2                      {
+ 284   3                              TRIG = 1;
+ 285   3                              P2 =  Letter1; // First letter for scrolling
+ 286   3                              TRIG = 0;
+ 287   3                              P2 = Letter2;
+ 288   3                              Delay(145);
+ 289   3                              Letter1 = Letter2;      
+ 290   3                              //arrayLengthnum = strlen(str);
+ 291   3                              j++;
+ 292   3                      }
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 6   
+
+ 293   2                      if (j == arrayLengthnum)
+ 294   2                      {
+ 295   3                                      TRIG = 1;
+ 296   3                                      P2 =  Letter1; // Last letter for scrolling
+ 297   3                                      TRIG = 0;
+ 298   3                                      P2 = 0xFF;
+ 299   3                                      Delay(145);
+ 300   3                                      j = 0; // go back to the start of the song list
+ 301   3                                      TRIG = 1;
+ 302   3                                      P2 =  0xFF; // Last letter for scrolling
+ 303   3                                      TRIG = 0;
+ 304   3                                      P2 = 0xFF;
+ 305   3                                      Delay(145);
+ 306   3                                      Letter1 = 0xFF;
+ 307   3                      }
+ 308   2      
+ 309   2                      
+ 310   2                                      
+ 311   2                              
+ 312   2                      
+ 313   2      
+ 314   2              } //end while
+ 315   1      }
+ 316          /*--------------------------------------------------------------------------------------------------------
+             -------------
+ 317                  Function:         Pause
+ 318          
+ 319                  Description:      Pause State
+ 320                  Revisions:        
+ 321          
+ 322          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+ 323          void Pause()
+ 324          {               
+ 325   1              /* SSD for PS */
+ 326   1                      TRIG = 1;
+ 327   1                      P2 = 0x8C;
+ 328   1                      TRIG = 0;
+ 329   1                      P2 = 0x92;                      
+ 330   1              while (1)
+ 331   1              {
+ 332   2      
+ 333   2                      if(S1 == 0)
+ 334   2                      {       
+ 335   3                              button_debounce();      // temp button debounce 
+ 336   3                              VolumeControl(1); /* volume down */
+ 337   3                      }
+ 338   2                      if(S2 == 0)
+ 339   2                      {       
+ 340   3                              button_debounce();                      
+ 341   3                              VolumeControl(0); /* volume up */
+ 342   3                      }
+ 343   2      
+ 344   2                      if (S3 == 0)
+ 345   2                      {
+ 346   3                              button_debounce();
+ 347   3      
+ 348   3                              break;
+ 349   3                      }
+ 350   2                      if(S4 == 0)
+ 351   2                      {       
+ 352   3                              button_debounce();      
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 7   
+
+ 353   3                              State(1); /* Stop */
+ 354   3                              break;                  
+ 355   3                              
+ 356   3                      }
+ 357   2              }
+ 358   1              return;
+ 359   1      }
+ 360          /*--------------------------------------------------------------------------------------------------------
+             -------------
+ 361                  Function:         Computer Interface
+ 362          
+ 363                  Description:      UART State
+ 364                  Revisions:        
+ 365          
+ 366          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+ 367          void Computer_Interface()
+ 368          {                       
+ 369   1                      int i;
+ 370   1                      unsigned var;
+ 371   1                      Volume = 0x3F;                  // Nominal volume value
+ 372   1      
+ 373   1                      TRIG = 1;
+ 374   1                      P2 = SSc;
+ 375   1                      TRIG = 0;
+ 376   1                      P2 = SSt;
+ 377   1                      
+ 378   1                      var = 0;
+ 379   1      
+ 380   1                      UARTInit();             // UART Intialise settings
+ 381   1      
+ 382   1                      i = 0;
+ 383   1                      while (i < 10)
+ 384   1                      {
+ 385   2                              TI0=1;
+ 386   2                              printf("\n");
+ 387   2                              i++;
+ 388   2                      }
+ 389   1      
+ 390   1              printf("*---------------------------------------------------------------------------------------------*\n
+             -");
+ 391   1              printf("*                                    JPOD MENU                                                *\n
+             -");
+ 392   1              printf("* 0 : Quit                                                                                    *\n
+             -");
+ 393   1              printf("*                                                                                             *\n
+             -");
+ 394   1              printf("* 1 : Play Song                                                                               *\n
+             -");
+ 395   1              printf("*                                                                                             *\n
+             -");
+ 396   1              printf("* 2 : Upload Song                                                                             *\n
+             -");
+ 397   1              printf("*                                                                                             *\n
+             -");
+ 398   1              printf("* 3 : Download Song                                                                           *\n
+             -");
+ 399   1              printf("*                                                                                             *\n
+             -");
+ 400   1              printf("* 4 : Keyboard                                                                                *\n
+             -");
+ 401   1              printf("*                                                                                             *\n
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 8   
+
+             -");
+ 402   1              printf("*---------------------------------------------------------------------------------------------*\n
+             -");
+ 403   1                      
+ 404   1                      TI0 = 0;
+ 405   1                      while(1)
+ 406   1                      {
+ 407   2                                      
+ 408   2                              if (RI0)
+ 409   2                              {
+ 410   3                                      var = SBUF0; // read in user input
+ 411   3                                      RI0 = 0;
+ 412   3                              }
+ 413   2                              if (var == 0x30)
+ 414   2                              {
+ 415   3                                      // Clear Screen
+ 416   3                                      while (i < 100)
+ 417   3                                      {
+ 418   4                                              TI0=1;
+ 419   4                                              printf("\n");
+ 420   4                                              i++;
+ 421   4                                      }
+ 422   3                                      // Return to stop state
+ 423   3                                      State(1);
+ 424   3                              }
+ 425   2                              if (var == 0x31)
+ 426   2                              {
+ 427   3                                      SongMenu(); // got to stop menu
+ 428   3                              }
+ 429   2                              if (var == 0x32)
+ 430   2                              {
+ 431   3                                      UploadSong(); // go to upload song
+ 432   3                              }
+ 433   2                              if (var == 0x33)
+ 434   2                              {
+ 435   3                                      DownloadSong();// Download Song 
+ 436   3                              }
+ 437   2                              if (var == 0x34)
+ 438   2                              {
+ 439   3                                      
+ 440   3                                      printf("*---------------------------------------------------------------------------------------------
+             -*\n");
+ 441   3                                      printf("*                                      KEYBOARD!!                                             
+             -*\n");                
+ 442   3                                      printf("*           Press keys on the bottom row of your keyboard (0 to exit)                         
+             -*\n");
+ 443   3                                      printf("*                                                                                             
+             -*\n");                
+ 444   3                                      printf("*---------------------------------------------------------------------------------------------
+             -*\n");
+ 445   3                                      Keyboard();
+ 446   3                              }
+ 447   2                      }
+ 448   1                      
+ 449   1      }
+ 450          
+ 451          void SongMenu()
+ 452          {
+ 453   1              unsigned var;
+ 454   1                      TI0 = 1;
+ 455   1                      var = 0;
+ 456   1                      printf("*---------------------------------------------------------------------------------------------*\
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 9   
+
+             -n");
+ 457   1                      printf("*                                    SONG MENU                                                *\
+             -n");
+ 458   1                      printf("* 0 : Back to Main Menu                                                                       *\
+             -n");
+ 459   1                      printf("*                                                                                             *\
+             -n");
+ 460   1                      printf("* 1 : Mary Had A Little Lamb                                                                  *\
+             -n");
+ 461   1                      printf("*                                                                                             *\
+             -n");
+ 462   1                      printf("* 2 : Twinkle Twinkle Little Star                                                             *\
+             -n");
+ 463   1                      printf("*                                                                                             *\
+             -n");
+ 464   1                      printf("* 3 : Flintstones                                                                             *\
+             -n");
+ 465   1                      printf("*                                                                                             *\
+             -n");
+ 466   1                      printf("* 4 : Saregama                                                                                *\
+             -n");
+ 467   1                      printf("*                                                                                             *\
+             -n");
+ 468   1                      printf("* 5 : Beethoven                                                                               *\
+             -n");
+ 469   1                      printf("*                                                                                             *\
+             -n");
+ 470   1                      printf("* 6 : Adams Family                                                                            *\
+             -n");
+ 471   1                      printf("*                                                                                             *\
+             -n");
+ 472   1                      printf("* 7 : Shuffle                                                                                 *\
+             -n");
+ 473   1                      printf("*                                                                                             *\
+             -n");
+ 474   1                      printf("*---------------------------------------------------------------------------------------------*\
+             -n");
+ 475   1                              
+ 476   1                      TI0 = 0;
+ 477   1                      while(1)
+ 478   1                      {
+ 479   2                                      
+ 480   2                              if (RI0)
+ 481   2                              {
+ 482   3                                      var = SBUF0; // read in user input
+ 483   3                                      RI0 = 0;
+ 484   3                              }
+ 485   2                              if (var == 0x30)
+ 486   2                              {
+ 487   3                                      RI0 = 1;
+ 488   3                                      Computer_Interface(); // return to main
+ 489   3                              }
+ 490   2      
+ 491   2                              //Play songs
+ 492   2                              if (var == 0x31)
+ 493   2                              {
+ 494   3                                      printf("Now Playing: Mary Had A Little Lamb\n");                
+ 495   3                                      selection = 0;
+ 496   3                                      Play();
+ 497   3                              }
+ 498   2                              if (var == 0x32)
+ 499   2                              {
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 10  
+
+ 500   3                                      printf("Now Playing: Twinkle Twinkle Little Star  \n");
+ 501   3                                      selection = 1;
+ 502   3                                      Play();
+ 503   3                              }
+ 504   2                              if (var == 0x33)
+ 505   2                              {
+ 506   3                                      printf("Now Playing: Flintstones\n");
+ 507   3                                      selection = 2;
+ 508   3                                      Play();
+ 509   3                              }
+ 510   2                              if (var == 0x34)
+ 511   2                              {
+ 512   3                                      printf("Now Playing: Saregama\n");
+ 513   3                                      selection = 3;
+ 514   3                                      Play();
+ 515   3                              }
+ 516   2                              if (var == 0x35)
+ 517   2                              {
+ 518   3                                      printf("Now Playing: Beethoven\n");
+ 519   3                                      selection = 4;
+ 520   3                                      Play();
+ 521   3                              }
+ 522   2                              if (var == 0x36)
+ 523   2                              {
+ 524   3                                      printf("Now Playing: Adams Family\n");
+ 525   3                                      selection = 5;
+ 526   3                                      Play();
+ 527   3                              }
+ 528   2      
+ 529   2                              // Start in shuffle mode
+ 530   2                              if (var == 0x37)
+ 531   2                              {
+ 532   3                                      printf("Now Shuffling\n");
+ 533   3                                      selection = 6;
+ 534   3                                      Play();
+ 535   3                              }
+ 536   2      
+ 537   2                      }
+ 538   1      }
+ 539          
+ 540          void DownloadSong()
+ 541          {       
+ 542   1              xdata unsigned var1;
+ 543   1              var1 = 0;
+ 544   1              TI0 = 1;
+ 545   1              printf("*---------------------------------------------------------------------------------------------*\n
+             -");
+ 546   1              printf("*                                      DOWNLOAD                                               *\n
+             -");                
+ 547   1              printf("*           Please choose a song to download into the specified format now                    *\n
+             -");
+ 548   1              printf("*                                                                                             *\n
+             -");                
+ 549   1              printf("* 0 : Back to Main Menu                                                                       *\n
+             -");
+ 550   1              printf("*                                                                                             *\n
+             -");
+ 551   1              printf("* 1 : Mary Had A Little Lamb                                                                  *\n
+             -");
+ 552   1              printf("*                                                                                             *\n
+             -");
+ 553   1              printf("* 2 : Twinkle Twinkle Little Star                                                             *\n
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 11  
+
+             -");
+ 554   1              printf("*                                                                                             *\n
+             -");
+ 555   1              printf("* 3 : Flintstones                                                                             *\n
+             -");
+ 556   1              printf("*                                                                                             *\n
+             -");
+ 557   1              printf("* 4 : Adams Family                                                                            *\n
+             -");
+ 558   1              printf("*                                                                                             *\n
+             -");
+ 559   1              printf("*---------------------------------------------------------------------------------------------*\n
+             -");
+ 560   1                              
+ 561   1              
+ 562   1              //counter = 0; 
+ 563   1      
+ 564   1              TI0 = 0;
+ 565   1      
+ 566   1              while(1)
+ 567   1              {                       
+ 568   2                      if (RI0)
+ 569   2                      {
+ 570   3                              var1 = SBUF0; // read in user input
+ 571   3                              RI0 = 0;
+ 572   3                      }
+ 573   2                      if (var1 == 0x30)
+ 574   2                      {
+ 575   3                              //RI0 = 1;
+ 576   3                              Computer_Interface(); // return to main
+ 577   3                      }
+ 578   2                              //Play songs
+ 579   2                      if (var1 == 0x31)
+ 580   2                      {
+ 581   3                              printf("Now Downloading: Mary Had A Little Lamb\n");    
+ 582   3                              Download(1);    
+ 583   3                      }
+ 584   2                      if (var1 == 0x32)
+ 585   2                      {
+ 586   3                              printf("Now Downloading: Twinkle Twinkle Little Star\n");
+ 587   3                              Download(2);
+ 588   3                      }
+ 589   2                      if (var1 == 0x33)
+ 590   2                      {
+ 591   3                              printf("Now Downloading: Flintstones\n");
+ 592   3                              Download(3);
+ 593   3                      }
+ 594   2                      if (var1 == 0x34)
+ 595   2                      {
+ 596   3                              printf("Now Downloading: Adams Family\n");
+ 597   3                              Download(4);
+ 598   3                      }
+ 599   2      
+ 600   2                      
+ 601   2              }
+ 602   1      
+ 603   1              
+ 604   1      }
+ 605          
+ 606          void Download(int a)
+ 607          {
+ 608   1              
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 12  
+
+ 609   1      /*      FILE *f = fopen("download.txt, "w");
+ 610   1              if (f == null)
+ 611   1              {
+ 612   1                      printf("Error opening file! Please check that download.txt exists");
+ 613   1              }
+ 614   1              else
+ 615   1              {       
+ 616   1                      
+ 617   1              }
+ 618   1      */
+ 619   1              switch( a ) 
+ 620   1              {       
+ 621   2                      case 1: printf(":Mary Had A Little Lamb#E1 D1 C1 D1 E1 E1 E2 D1 D1 D2 E1 G1 G2 E1 D1 C1 D1 E1 E1 E1 E1 D
+             -1 D1 E1 D1 C4 !\n");
+ 622   2                                      break;
+ 623   2                      case 2: printf(":Twinkle Twinkle Little Star#C1 C1 G1 G1 A1 A1 G2 F1 F1 E1 E1 D1 D1 C2 G1 G1 F1 F1 E1 E1
+             - D2 G1 G1 F1 F1 E1 E1 D2 C1 C1 G1 G1 A1 A1 G2 F1 F1 E1 E1 D1 D1 C2 !\n");
+ 624   2                                      break;
+ 625   2                      case 3: printf(":Flintstones#notes!\n");
+ 626   2                                      break;
+ 627   2                      case 4: printf(":Adams Family#notes!\n");
+ 628   2                                      break;
+ 629   2              }
+ 630   1      
+ 631   1              printf("Download Complete! Please save to text file\n");
+ 632   1              TI0 = 1;
+ 633   1              Computer_Interface();
+ 634   1      }
+ 635          
+ 636          void UploadSong()
+ 637          {       
+ 638   1              xdata unsigned Upload[198];
+ 639   1              xdata char convert[198];
+ 640   1              xdata unsigned var;
+ 641   1              int i = 0;
+ 642   1              int convertCount = 0;
+ 643   1              
+ 644   1              
+ 645   1              TI0=1;
+ 646   1              printf("*---------------------------------------------------------------------------------------------*\n
+             -");
+ 647   1              printf("*                                      UPLOAD                                                 *\n
+             -");                
+ 648   1              printf("*           Please upload a text file in the specified format now                             *\n
+             -");
+ 649   1              printf("*                                                                                             *\n
+             -");                
+ 650   1              printf("*---------------------------------------------------------------------------------------------*\n
+             -");
+ 651   1              
+ 652   1              printf(" \n");
+ 653   1              counter = 0; 
+ 654   1      
+ 655   1              TI0 = 0;
+ 656   1      
+ 657   1              while(1)
+ 658   1              {                       
+ 659   2                      if (RI0)
+ 660   2                      {
+ 661   3                              var = SBUF0;
+ 662   3                              Upload[counter] = var;
+ 663   3                              counter++;
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 13  
+
+ 664   3                              RI0 = 0;
+ 665   3      
+ 666   3                              if (var == 0x21)
+ 667   3                              {
+ 668   4                                      // convert ascii to char
+ 669   4                                      for (i=0; i<arraySize; i++)
+ 670   4                                      {
+ 671   5                                              convert[i] = Upload[i];                 
+ 672   5                                      }
+ 673   4                                      
+ 674   4                                      printf("\n Upload Complete! ");
+ 675   4                                      TI0 = 0;
+ 676   4                                      RI0 = 1;
+ 677   4                                      PlayUpload(convert);
+ 678   4                              }
+ 679   3      
+ 680   3                      }
+ 681   2                      
+ 682   2              }
+ 683   1      
+ 684   1      
+ 685   1      
+ 686   1      
+ 687   1      }
+ 688          
+ 689          void PlayUpload(char a[])       // Song for Upload played at this point
+ 690          {
+ 691   1              int hash = 0;                   // Varaible declared to find where the song title ends in upload file and changes to note
+             -s
+ 692   1              int j = 0;                              // Local variable
+ 693   1              int k = 0;                              // Local variable
+ 694   1              
+ 695   1      
+ 696   1              printf("Now Playing: ");
+ 697   1              for (j = 1; j < arraySize; j++)
+ 698   1              {
+ 699   2                      if (a[j] == '#')
+ 700   2                      {
+ 701   3                              printf("%c",a[j-1]);
+ 702   3                              hash = j;                       
+ 703   3                              break;
+ 704   3                      } 
+ 705   2                      else
+ 706   2                      {
+ 707   3                              printf("%c",a[j]); // print song uploaded and playing
+ 708   3                              str[j] = a[j];
+ 709   3                      }
+ 710   2              }
+ 711   1      
+ 712   1              // Play notes
+ 713   1              k = hash + 1; // start from the first note after the hash
+ 714   1              TI0 = 0;
+ 715   1              
+ 716   1              PlayInit(); // initialize play mode
+ 717   1      
+ 718   1      
+ 719   1              while (k < arraySize)
+ 720   1              {
+ 721   2                      j = a[k+1] - '0'; // char to int for play length time
+ 722   2                      
+ 723   2                      if (a[k] ==  '!') // if it is the end char
+ 724   2                      {
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 14  
+
+ 725   3                              RI0 = 1;
+ 726   3                              Computer_Interface(); // return to main
+ 727   3                      }
+ 728   2                      else // else play the note
+ 729   2                      {
+ 730   3                              Delay(50);
+ 731   3                              switch (a[k])
+ 732   3                              {
+ 733   4                                      case 'A': NotePlay(pitch_A5, j);
+ 734   4                                                      break;
+ 735   4                                      case 'B': NotePlay(pitch_B5, j);
+ 736   4                                                      break; 
+ 737   4                                      case 'C': NotePlay(pitch_C5, j);
+ 738   4                                                      break;
+ 739   4                                      case 'D': NotePlay(pitch_D5, j);
+ 740   4                                                      break;
+ 741   4                                      case 'E': NotePlay(pitch_E5, j);
+ 742   4                                                      break;
+ 743   4                                      case 'F': NotePlay(pitch_F5, j);
+ 744   4                                                      break;
+ 745   4                                      case 'G': NotePlay(pitch_G5, j);
+ 746   4                                                      break;
+ 747   4                              
+ 748   4                              }
+ 749   3                      }
+ 750   2                      k = k + 3; // move to next note
+ 751   2      
+ 752   2              }
+ 753   1      
+ 754   1      }
+ 755          
+ 756          
+ 757          void Keyboard(void)
+ 758          {
+ 759   1              unsigned var;
+ 760   1              int i = 0;
+ 761   1      
+ 762   1              /*for (i = 0; i < 30; i++)
+ 763   1              {
+ 764   1                      str[i] = "";
+ 765   1              }*/
+ 766   1      
+ 767   1              PlayInit(); // initialize play mode
+ 768   1      
+ 769   1      
+ 770   1              i = 0; // reset counter
+ 771   1              TI0 = 0;
+ 772   1              
+ 773   1              //KeyboardPlay(1);
+ 774   1              //KeyboardPlay(2);
+ 775   1              //KeyboardPlay(3);
+ 776   1              
+ 777   1              
+ 778   1                      RI0 = 0;
+ 779   1                      TI0 = 0;
+ 780   1                      var = 0;
+ 781   1      
+ 782   1                      while(1)
+ 783   1      
+ 784   1                      {
+ 785   2      
+ 786   2                              if (RI0)
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 15  
+
+ 787   2                              {
+ 788   3                                      var = SBUF0; // read in user input
+ 789   3                                      RI0 = 0;
+ 790   3                              }
+ 791   2                              if (var == 0x30)
+ 792   2                              {
+ 793   3                                      i = 0;
+ 794   3                                      // Clear Screen
+ 795   3                                      while (i < 100)
+ 796   3                                      {
+ 797   4                                              TI0=1;
+ 798   4                                              printf("\n");
+ 799   4                                              i++;
+ 800   4                                      }
+ 801   3                                      Computer_Interface(); // return to main
+ 802   3                              }
+ 803   2                              if (var == 0x31) // z
+ 804   2                              {
+ 805   3                                      printf("A\n");
+ 806   3                                      str[0] = 'A';
+ 807   3                                      KeyboardPlay(1);
+ 808   3                                      
+ 809   3                                      break;
+ 810   3                              }
+ 811   2                              if (var == 0x32) // x
+ 812   2                              {
+ 813   3                                      printf("B\n");
+ 814   3                                      KeyboardPlay(2);
+ 815   3                                      break;
+ 816   3                              }
+ 817   2                              if (var == 0x33) // c
+ 818   2                              {
+ 819   3                                      printf("C\n");
+ 820   3                                      KeyboardPlay(3);
+ 821   3                                      break;
+ 822   3                              }
+ 823   2                              if (var == 0x34) // v
+ 824   2                              {
+ 825   3                                      printf("D\n");
+ 826   3                                      KeyboardPlay(4);
+ 827   3                                      break;
+ 828   3                              }
+ 829   2                              if (var == 0x35) // b
+ 830   2                              {
+ 831   3                                      printf("E\n");
+ 832   3                                      KeyboardPlay(5);
+ 833   3                                      break;
+ 834   3                              }
+ 835   2                              if (var == 0x36) // n
+ 836   2                              {
+ 837   3                                      printf("F\n");
+ 838   3                                      KeyboardPlay(6);
+ 839   3                                      break;
+ 840   3                              }
+ 841   2                              if (var == 0x37) // m
+ 842   2                              {
+ 843   3                                      printf("G\n");
+ 844   3                                      KeyboardPlay(7);
+ 845   3                                      break;
+ 846   3                              }
+ 847   2                              var = 0;
+ 848   2                      }
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 16  
+
+ 849   1      
+ 850   1              Computer_Interface(); // return to main
+ 851   1      }
+ 852          
+ 853          void KeyboardPlay(int a)
+ 854          {
+ 855   1      
+ 856   1      
+ 857   1                      switch (a)
+ 858   1                      {       
+ 859   2                              case 0: 
+ 860   2                                              break;
+ 861   2                              case 1: NotePlay(pitch_A5, 1);                          
+ 862   2                                              break;
+ 863   2                              case 2: NotePlay(pitch_B5, 1);
+ 864   2                                              break; 
+ 865   2                              case 3: NotePlay(pitch_C5, 1);
+ 866   2                                              break;
+ 867   2                              case 4: NotePlay(pitch_D5, 1);
+ 868   2                                              break;
+ 869   2                              case 5: NotePlay(pitch_E5, 1);
+ 870   2                                              break;
+ 871   2                              case 6: NotePlay(pitch_F5, 1);
+ 872   2                                              break;
+ 873   2                              case 7: NotePlay(pitch_G5, 1);
+ 874   2                                              break;
+ 875   2              
+ 876   2                      }
+ 877   1      
+ 878   1              Keyboard();
+ 879   1      
+ 880   1      }
+ 881          
+ 882          /*--------------------------------------------------------------------------------------------------------
+             -------------
+ 883                  Function:         UART Intialise Settings
+ 884          
+ 885                  Description:      
+ 886                  Revisions:        
+ 887          
+ 888          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+ 889          void UARTInit()
+ 890          {
+ 891   1                      SFRPAGE   = UART0_PAGE;
+ 892   1              SCON0     = 0x50;
+ 893   1                      
+ 894   1              SFRPAGE   = TIMER01_PAGE;
+ 895   1              TMOD      = 0x20;
+ 896   1                      CKCON     = 0x10;
+ 897   1              TH1       = 0xF6;
+ 898   1      }
+ 899          /*--------------------------------------------------------------------------------------------------------
+             -------------
+ 900                  Function:         Play Song Intialise Interrupts and SSD
+ 901          
+ 902                  Description:      
+ 903                  Revisions:        
+ 904          
+ 905          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+ 906          void PlayInit()
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 17  
+
+ 907          {       
+ 908   1              count = 2;      // Counter used to slow down scrolling speed in play mode
+ 909   1              
+ 910   1              EIE2      = 0x04;
+ 911   1      
+ 912   1              j=0;
+ 913   1              Letter1 = 0xFF;
+ 914   1              TRIG = 1;
+ 915   1              P2 =  Letter1;
+ 916   1              LetterCheckSSD(j); // First letter for scrolling
+ 917   1              TRIG = 0;
+ 918   1              P2 = Letter2;
+ 919   1      }
+ 920          /*--------------------------------------------------------------------------------------------------------
+             -------------
+ 921                  Function:         RandomNum
+ 922          
+ 923                  Description:      Returns a random integer for shuffle mode
+ 924                  Revisions:        
+ 925          
+ 926          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+ 927          int RandomNum()
+ 928          {
+ 929   1      
+ 930   1              return rand() % 5 + 1;  
+ 931   1      
+ 932   1      }
+ 933          /*--------------------------------------------------------------------------------------------------------
+             -------------
+ 934                  Function:         Volume Control
+ 935          
+ 936                  Description:      increases/decreases volume based on user input
+ 937                  Revisions:        
+ 938          
+ 939          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+ 940          void VolumeControl(int updown)
+ 941          {
+ 942   1              if (updown == 0)
+ 943   1              {
+ 944   2                      volumeSelect++;
+ 945   2                      if (volumeSelect > 9) // if you have reached max volume
+ 946   2                      {
+ 947   3                              volumeSelect = 9; // keep at max
+ 948   3                      }
+ 949   2              }
+ 950   1              else if (updown == 1)
+ 951   1              {
+ 952   2                      volumeSelect--;
+ 953   2                      if (volumeSelect < 0) // if you have reached min volume
+ 954   2                      {
+ 955   3                              volumeSelect = 0; // keep at min
+ 956   3                      }
+ 957   2              }
+ 958   1      
+ 959   1      
+ 960   1      
+ 961   1              switch( volumeSelect ) 
+ 962   1              {       
+ 963   2                      case 0:
+ 964   2                              Volume=0x00;                    // new volume value     
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 18  
+
+ 965   2                              LED7 = 0;               // LED 1   
+ 966   2                              LED8 = 0;               // LED 2
+ 967   2                              LED9 = 0;               // LED 3
+ 968   2                              LED10 = 0;                              // LED 4
+ 969   2                      break;
+ 970   2                  case 1:
+ 971   2                              Volume=0x1F;                    // new volume value     
+ 972   2                              LED7 = 0;               // LED 1   
+ 973   2                              LED8 = 0;               // LED 2
+ 974   2                              LED9 = 0;               // LED 3
+ 975   2                              LED10 = 0;                              // LED 4
+ 976   2                      break;
+ 977   2                  case 2:
+ 978   2                              Volume=0x2F;                    // new volume value     
+ 979   2                              LED7 = 1;               // LED 1   
+ 980   2                              LED8 = 0;               // LED 2
+ 981   2                              LED9 = 0;               // LED 3
+ 982   2                              LED10 = 0;                              // LED 4
+ 983   2                      break;
+ 984   2                      case 3:
+ 985   2                              Volume=0x3F;                    // new volume value     
+ 986   2                              LED7 = 1;               // LED 1   
+ 987   2                              LED8 = 0;               // LED 2
+ 988   2                              LED9 = 0;               // LED 3
+ 989   2                              LED10 = 0;                              // LED 4;
+ 990   2                              break;
+ 991   2                      case 4:
+ 992   2                              Volume=0x4F;                    // new volume value     
+ 993   2                              LED7 = 1;               // LED 1   
+ 994   2                              LED8 = 1;               // LED 2
+ 995   2                              LED9 = 0;               // LED 3
+ 996   2                              LED10 = 0;                              // LED 4
+ 997   2                              break;
+ 998   2                      case 5:
+ 999   2                              Volume=0x5F;                    // new volume value     
+1000   2                              LED7 = 1;               // LED 1   
+1001   2                              LED8 = 1;               // LED 2
+1002   2                              LED9 = 0;               // LED 3
+1003   2                              LED10 = 0;                              // LED 4
+1004   2                      break;
+1005   2                  case 6:
+1006   2                              Volume=0x6F;                    // new volume value     
+1007   2                              LED7 = 1;               // LED 1   
+1008   2                              LED8 = 1;               // LED 2
+1009   2                              LED9 = 1;               // LED 3
+1010   2                              LED10 = 0;                              // LED 4
+1011   2                      break;
+1012   2                      case 7:
+1013   2                              Volume=0x7F;                    // new volume value     
+1014   2                              LED7 = 1;               // LED 1   
+1015   2                              LED8 = 1;               // LED 2
+1016   2                              LED9 = 1;               // LED 3
+1017   2                              LED10 = 0;                              // LED 4;
+1018   2                              break;
+1019   2                      case 8:
+1020   2                              Volume=0x8F;                    // new volume value     
+1021   2                              LED7 = 1;               // LED 1   
+1022   2                              LED8 = 1;               // LED 2
+1023   2                              LED9 = 1;               // LED 3
+1024   2                              LED10 = 1;                              // LED 4
+1025   2                              break;
+1026   2                      case 9:
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 19  
+
+1027   2                              Volume=0x9F;                    // new volume value     
+1028   2                              LED7 = 1;               // LED 1   
+1029   2                              LED8 = 1;               // LED 2
+1030   2                              LED9 = 1;               // LED 3
+1031   2                              LED10 = 1;                              // LED 4;
+1032   2                              break;
+1033   2                      
+1034   2      
+1035   2              }
+1036   1              
+1037   1      
+1038   1      }
+1039          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1040                  Function:         LetterCheckSSD
+1041          
+1042                  Description:     Reads Character in Arrays or strings and outputs which SSD for that 
+1043                                                          letter into global variable Letter2 
+1044          
+1045                  Revisions:
+1046          
+1047          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1048          void LetterCheckSSD(int j)
+1049          {
+1050   1              
+1051   1                      if(str[j]=='a'||str[j]=='A')
+1052   1                      {       
+1053   2                              Letter2=SSA;
+1054   2                              
+1055   2                      }
+1056   1                      if(str[j]=='b'||str[j]=='B')
+1057   1                      {       
+1058   2                                                      
+1059   2                              Letter2=SSb;
+1060   2                              
+1061   2                      }
+1062   1                      if(str[j]=='c'||str[j]=='C')
+1063   1                      {               
+1064   2                                      
+1065   2                              Letter2=SSc;
+1066   2                              
+1067   2                      }
+1068   1                      if(str[j]=='d'||str[j]=='D')
+1069   1                      {               
+1070   2                                      
+1071   2                              Letter2=SSd;
+1072   2                      }
+1073   1                      if(str[j]=='e'||str[j]=='E')
+1074   1                      {       
+1075   2                              Letter2=SSE;
+1076   2                      
+1077   2                      }
+1078   1                      if(str[j]=='f'||str[j]=='F')
+1079   1                      {       
+1080   2                                                      
+1081   2                              Letter2=SSF;
+1082   2                              
+1083   2                      }
+1084   1                      if(str[j]=='g'||str[j]=='G')
+1085   1                      {               
+1086   2                                      
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 20  
+
+1087   2                              Letter2=SSG;
+1088   2                              
+1089   2                      }
+1090   1                      if(str[j]=='h'||str[j]=='H')
+1091   1                      {               
+1092   2                                      
+1093   2                              Letter2=SSh;
+1094   2                              
+1095   2                      }
+1096   1                      if(str[j]=='i'||str[j]=='I')
+1097   1                      {       
+1098   2                              Letter2=SSi;
+1099   2                              
+1100   2                      }
+1101   1                      if(str[j]=='j'||str[j]=='J')
+1102   1                      {       
+1103   2                                                      
+1104   2                              Letter2=SSJ;
+1105   2                              
+1106   2                      }
+1107   1                      if(str[j]=='k'||str[j]=='K')
+1108   1                      {               
+1109   2                                      
+1110   2                              Letter2=SSK;
+1111   2                              
+1112   2                      }
+1113   1                      if(str[j]=='l'||str[j]=='L')
+1114   1                      {               
+1115   2                                      
+1116   2                              Letter2=SSL;
+1117   2                              
+1118   2                      }
+1119   1                      if(str[j]=='m'||str[j]=='M')
+1120   1                      {       
+1121   2                              Letter2=SSM;
+1122   2                              
+1123   2                      }
+1124   1                      if(str[j]=='n'||str[j]=='N')
+1125   1                      {       
+1126   2                                                      
+1127   2                              Letter2=SSn;
+1128   2                              
+1129   2                      }
+1130   1                      if(str[j]=='o'||str[j]=='O')
+1131   1                      {               
+1132   2                                      
+1133   2                              Letter2=SSo;
+1134   2                              
+1135   2                      }
+1136   1                      if(str[j]=='p'||str[j]=='P')
+1137   1                      {               
+1138   2                                      
+1139   2                              Letter2=SSp;
+1140   2                              
+1141   2                      }
+1142   1                      if(str[j]=='q'||str[j]=='Q')
+1143   1                      {       
+1144   2                                                      
+1145   2                              Letter2=SSq;
+1146   2                              
+1147   2                      }
+1148   1                      if(str[j]=='r'||str[j]=='R')
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 21  
+
+1149   1                      {               
+1150   2                                      
+1151   2                              Letter2=SSr;
+1152   2                              
+1153   2                      }
+1154   1                      if(str[j]=='s'||str[j]=='S')
+1155   1                      {               
+1156   2                                      
+1157   2                              Letter2=SSS;
+1158   2                              
+1159   2                      }
+1160   1                      if(str[j]=='t'||str[j]=='T')
+1161   1                      {       
+1162   2                              Letter2=SSt;
+1163   2                              
+1164   2                      }
+1165   1                      if(str[j]=='u'||str[j]=='U')
+1166   1                      {       
+1167   2                                                      
+1168   2                              Letter2=SSu;
+1169   2                              
+1170   2                      }
+1171   1                      if(str[j]=='v'||str[j]=='V')
+1172   1                      {               
+1173   2                                      
+1174   2                              Letter2=SSv;
+1175   2                              
+1176   2                      }
+1177   1                      if(str[j]=='w'||str[j]=='W')
+1178   1                      {               
+1179   2                                      
+1180   2                              Letter2=SSW;
+1181   2                              
+1182   2                      }
+1183   1                      if(str[j]=='x'||str[j]=='X')
+1184   1                      {       
+1185   2                              Letter2=SSX;
+1186   2                      
+1187   2                      }
+1188   1                      if(str[j]=='y'||str[j]=='Y')
+1189   1                      {       
+1190   2                                                      
+1191   2                              Letter2=SSY;
+1192   2                              
+1193   2                      }
+1194   1                      if(str[j]=='z'||str[j]=='Z')
+1195   1                      {               
+1196   2                                      
+1197   2                              Letter2=SSZ;
+1198   2                      
+1199   2                      }
+1200   1                      if(str[j]==' ')
+1201   1                      {       
+1202   2                              Letter2=0xFF;
+1203   2                      }               
+1204   1      
+1205   1              
+1206   1      
+1207   1      }
+1208          
+1209          
+1210          
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 22  
+
+1211          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1212                  Function:         Mary Had A Little Lamb
+1213          
+1214                  Description:      
+1215          
+1216                  Revisions:
+1217          
+1218          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1219          void Mary_Had_A_Little_Lamb(void)
+1220          {
+1221   1              Delay(60);
+1222   1      
+1223   1              NotePlay(pitch_E5, 1);// e1
+1224   1              Delay(50);
+1225   1              NotePlay(pitch_D5, 1);//d1
+1226   1              Delay(50);
+1227   1              NotePlay(pitch_C5, 1);//c1
+1228   1              Delay(50);
+1229   1              NotePlay(pitch_D5, 1);//d1
+1230   1              Delay(50);
+1231   1              NotePlay(pitch_E5, 1);//e1
+1232   1              Delay(50);
+1233   1              NotePlay(pitch_E5, 1);;//e1
+1234   1              Delay(50);//delay
+1235   1              NotePlay(pitch_E5, 2);//e2
+1236   1              Delay(50);
+1237   1              NotePlay(pitch_D5, 1);//d1
+1238   1              Delay(50);
+1239   1              NotePlay(pitch_D5, 1);//d1
+1240   1              Delay(50);//delay
+1241   1              NotePlay(pitch_D5, 2);//d2
+1242   1              Delay(50);
+1243   1              NotePlay(pitch_E5, 1);//e1
+1244   1              Delay(50);
+1245   1              NotePlay(pitch_G5, 1);//g1
+1246   1              Delay(50);//delay
+1247   1              NotePlay(pitch_G5, 1);//g2
+1248   1              Delay(50);
+1249   1              NotePlay(pitch_E5, 1);//e1
+1250   1              Delay(50);
+1251   1              NotePlay(pitch_D5, 1);//d1
+1252   1              Delay(50);
+1253   1              NotePlay(pitch_C5, 1);//c1
+1254   1              Delay(50);
+1255   1              NotePlay(pitch_D5, 1);//d1
+1256   1              Delay(50);
+1257   1              NotePlay(pitch_E5, 1);//e1
+1258   1              Delay(50);
+1259   1              NotePlay(pitch_E5, 1);//e1
+1260   1              Delay(50);//delay
+1261   1              NotePlay(pitch_E5, 1);//e1
+1262   1              Delay(50);
+1263   1              NotePlay(pitch_E5, 1);//e1
+1264   1              Delay(50);
+1265   1              NotePlay(pitch_D5, 1);//d1
+1266   1              Delay(50);
+1267   1              NotePlay(pitch_D5, 1);//d1
+1268   1              Delay(50);
+1269   1              NotePlay(pitch_E5, 1);//e1
+1270   1              Delay(50);
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 23  
+
+1271   1              NotePlay(pitch_D5, 1);//d1
+1272   1              Delay(50);
+1273   1              NotePlay(pitch_C5, 4);//c4
+1274   1      
+1275   1      }
+1276          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1277                  Function:         Twinkle Twinkle Little Star
+1278          
+1279                  Description:      
+1280          
+1281                  Revisions:
+1282          
+1283          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1284          void Twinkle_Twinkle_Little_Star(void)
+1285          {
+1286   1              Delay(60);
+1287   1      
+1288   1              NotePlay(pitch_C5, 1);
+1289   1              Delay(30);
+1290   1              NotePlay(pitch_C5, 1);
+1291   1              Delay(30);
+1292   1              NotePlay(pitch_G5, 1);
+1293   1              Delay(30);
+1294   1              NotePlay(pitch_G5, 1);
+1295   1              Delay(30);
+1296   1              NotePlay(pitch_A5, 1);
+1297   1              Delay(30);
+1298   1              NotePlay(pitch_A5, 1);
+1299   1              Delay(30);
+1300   1              NotePlay(pitch_G5, 2);
+1301   1              Delay(30);
+1302   1              NotePlay(pitch_F5, 1);
+1303   1              Delay(30);
+1304   1              NotePlay(pitch_F5, 1);
+1305   1              Delay(30);
+1306   1              NotePlay(pitch_E5, 1);
+1307   1              Delay(30);
+1308   1              NotePlay(pitch_E5, 1);
+1309   1              Delay(30);
+1310   1              NotePlay(pitch_D5, 1);
+1311   1              Delay(30);
+1312   1              NotePlay(pitch_D5, 1);
+1313   1              Delay(30);
+1314   1              NotePlay(pitch_C5, 2);
+1315   1              Delay(30);
+1316   1              NotePlay(pitch_G5, 1);
+1317   1              Delay(30);
+1318   1              NotePlay(pitch_G5, 1);
+1319   1              Delay(30);
+1320   1              NotePlay(pitch_F5, 1);
+1321   1              Delay(30);
+1322   1              NotePlay(pitch_F5, 1);
+1323   1              Delay(30);
+1324   1              NotePlay(pitch_E5, 1);
+1325   1              Delay(30);
+1326   1              NotePlay(pitch_E5, 1);
+1327   1              Delay(30);
+1328   1              NotePlay(pitch_D5, 2);
+1329   1              Delay(30);
+1330   1              NotePlay(pitch_G5, 1);
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 24  
+
+1331   1              Delay(30);
+1332   1              NotePlay(pitch_G5, 1);
+1333   1              Delay(30);
+1334   1              NotePlay(pitch_F5, 1);
+1335   1              Delay(30);
+1336   1              NotePlay(pitch_F5, 1);
+1337   1              Delay(30);
+1338   1              NotePlay(pitch_E5, 1);
+1339   1              Delay(30);
+1340   1              NotePlay(pitch_E5, 1);
+1341   1              Delay(30);
+1342   1              NotePlay(pitch_D5, 2);
+1343   1              Delay(30);
+1344   1              NotePlay(pitch_C5, 1);
+1345   1              Delay(30);
+1346   1              NotePlay(pitch_C5, 1);
+1347   1              Delay(30);
+1348   1              NotePlay(pitch_G5, 1);
+1349   1              Delay(30);
+1350   1              NotePlay(pitch_G5, 1);
+1351   1              Delay(30);
+1352   1              NotePlay(pitch_A5, 1);
+1353   1              Delay(30);
+1354   1              NotePlay(pitch_A5, 1);
+1355   1              Delay(30);
+1356   1              NotePlay(pitch_G5, 2);
+1357   1              Delay(30);
+1358   1              NotePlay(pitch_F5, 1);
+1359   1              Delay(30);
+1360   1              NotePlay(pitch_F5, 1);
+1361   1              Delay(30);
+1362   1              NotePlay(pitch_E5, 1);
+1363   1              Delay(30);
+1364   1              NotePlay(pitch_E5, 1);
+1365   1              Delay(30);
+1366   1              NotePlay(pitch_D5, 1);
+1367   1              Delay(30);
+1368   1              NotePlay(pitch_D5, 1);
+1369   1              Delay(30);
+1370   1              NotePlay(pitch_C5, 2);
+1371   1      
+1372   1      
+1373   1      
+1374   1      }
+1375          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1376                  Function:         Adams Family
+1377          
+1378                  Description:      
+1379          
+1380                  Revisions:
+1381          
+1382          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1383          void AdamsFamily(void)
+1384          { //d=4, o=6, b=50
+1385   1              
+1386   1              Delay(60);
+1387   1              
+1388   1              NotePlay(pitch_P, 1); //32P
+1389   1              NotePlay(pitch_Db6, 1); //32c#
+1390   1              NotePlay(pitch_Gb6, 2); //16f#
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 25  
+
+1391   1              NotePlay(pitch_Bb6, 1); //32a#
+1392   1              NotePlay(pitch_Gb6, 2); //16f#
+1393   1              NotePlay(pitch_Db6, 1); //32c#
+1394   1              NotePlay(pitch_C6, 2); //16c
+1395   1              NotePlay(pitch_Ab6, 4); //8g#
+1396   1              NotePlay(pitch_Gb6, 1); //32f#
+1397   1              NotePlay(pitch_F6, 2); //16f
+1398   1              NotePlay(pitch_Ab6, 1); //32g#
+1399   1              NotePlay(pitch_F6, 2); //16f
+1400   1              NotePlay(pitch_Db6, 1); //32c#
+1401   1              NotePlay(pitch_Bb5, 2); //16a#5
+1402   1              NotePlay(pitch_Gb6, 4); //8f#
+1403   1              NotePlay(pitch_Db6, 1); //32c#
+1404   1              NotePlay(pitch_Gb6, 2); //16f#
+1405   1              NotePlay(pitch_Bb6, 1); //32a#
+1406   1              NotePlay(pitch_Gb6, 2); //16f#
+1407   1              NotePlay(pitch_Db6, 1); //32c#
+1408   1              NotePlay(pitch_C6, 2); //16c
+1409   1              NotePlay(pitch_Ab6, 4); //8g#
+1410   1              NotePlay(pitch_Gb6, 1); //32f#
+1411   1              NotePlay(pitch_F6, 2); //16f
+1412   1              NotePlay(pitch_Db6, 1); //32c#
+1413   1              NotePlay(pitch_Eb6, 2); //16d#
+1414   1              NotePlay(pitch_F6, 1); //32f
+1415   1              NotePlay(pitch_Gb6, 8); //f#
+1416   1              NotePlay(pitch_Db6, 1); //32c#
+1417   1              NotePlay(pitch_Eb6, 1); //32d#
+1418   1              NotePlay(pitch_F6, 1); //32f
+1419   1              NotePlay(pitch_Gb6, 8); //f#
+1420   1              NotePlay(pitch_Db6, 1); //32c#
+1421   1              NotePlay(pitch_Eb6, 1); //32d#
+1422   1              NotePlay(pitch_G6, 1); //32g
+1423   1              NotePlay(pitch_Ab6, 8); //g#
+1424   1              NotePlay(pitch_Eb6, 1); //32d#
+1425   1              NotePlay(pitch_F6, 1); //32f
+1426   1              NotePlay(pitch_G6, 1); //32g
+1427   1              NotePlay(pitch_Ab6, 2); //16g#.
+1428   1              NotePlay(pitch_Ab6, 4); //16g#.
+1429   1              NotePlay(pitch_Eb6, 1); //32d#
+1430   1              NotePlay(pitch_F6, 1); //32f
+1431   1              NotePlay(pitch_G6, 1); //32g
+1432   1              NotePlay(pitch_Ab6, 2); //16g#.
+1433   1              NotePlay(pitch_Ab6, 4); //16g#.
+1434   1              NotePlay(pitch_Db6, 1); //32c#
+1435   1              NotePlay(pitch_Eb6, 1); //32d#
+1436   1              NotePlay(pitch_F6, 1); //32f
+1437   1              NotePlay(pitch_Gb6, 1); //32f#
+1438   1      }
+1439          
+1440          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1441                  Function:         Beethoven
+1442          
+1443                  Description:      
+1444          
+1445                  Revisions:
+1446          
+1447          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1448          void BeethovenPlay(void)
+1449          {int a = 0;
+1450   1              Delay(60);
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 26  
+
+1451   1      
+1452   1       while (a < 2)
+1453   1       {
+1454   2              NotePlay(pitch_E6, 2);
+1455   2              NotePlay(pitch_Eb6, 2);
+1456   2              NotePlay(pitch_E6, 2);
+1457   2              NotePlay(pitch_Eb6, 2);
+1458   2              NotePlay(pitch_E6, 2);
+1459   2              NotePlay(pitch_B5, 2);
+1460   2              NotePlay(pitch_D6, 2);
+1461   2              NotePlay(pitch_C6, 2);
+1462   2              NotePlay(pitch_A5, 4);
+1463   2              NotePlay(pitch_C5, 2);
+1464   2              NotePlay(pitch_E6, 2);
+1465   2              NotePlay(pitch_A6, 2);
+1466   2              NotePlay(pitch_B6, 4);  
+1467   2              NotePlay(pitch_E5, 2);
+1468   2              NotePlay(pitch_A5, 2);
+1469   2              NotePlay(pitch_B5, 2);
+1470   2              NotePlay(pitch_C6, 4);
+1471   2      
+1472   2              a++;
+1473   2              }
+1474   1      }
+1475          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1476                  Function:         Saregama
+1477          
+1478                  Description:      
+1479          
+1480                  Revisions:
+1481          
+1482          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1483          void Saregama(void)
+1484          {
+1485   1              Delay(60);
+1486   1      
+1487   1              NotePlay(pitch_Db5, 2);
+1488   1              NotePlay(pitch_Eb5, 2);
+1489   1              NotePlay(pitch_F5, 2);
+1490   1              NotePlay(pitch_Gb5, 2);
+1491   1              NotePlay(pitch_Ab5, 2);
+1492   1              NotePlay(pitch_Bb5, 2);
+1493   1              NotePlay(pitch_C6, 2);
+1494   1              NotePlay(pitch_Db6, 2);
+1495   1              NotePlay(pitch_P, 8);
+1496   1              NotePlay(pitch_Db6, 2);
+1497   1              NotePlay(pitch_C6, 2);
+1498   1              NotePlay(pitch_Bb5, 2);
+1499   1              NotePlay(pitch_Ab5, 2);
+1500   1              NotePlay(pitch_Gb5, 2);
+1501   1              NotePlay(pitch_F5, 2);
+1502   1              NotePlay(pitch_Eb5, 2);
+1503   1              NotePlay(pitch_Db5, 2);
+1504   1      }
+1505          
+1506          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1507                  Function:         Flintstones
+1508          
+1509                  Description:      
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 27  
+
+1510          
+1511                  Revisions:
+1512          
+1513          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1514          void Flintstones(void)
+1515          { 
+1516   1      
+1517   1              Delay(60);
+1518   1      
+1519   1              NotePlay(pitch_Ab5, 2); //g#
+1520   1              NotePlay(pitch_Db5, 2); //c#
+1521   1              NotePlay(pitch_P, 1); //8p
+1522   1              NotePlay(pitch_Db6, 2); //c#6
+1523   1              NotePlay(pitch_Bb5, 1); //8a#
+1524   1              NotePlay(pitch_Ab5, 2); //g#
+1525   1              NotePlay(pitch_Db5, 2); //c#
+1526   1              NotePlay(pitch_P, 1); //8p
+1527   1              NotePlay(pitch_Ab5, 2); //g#
+1528   1              NotePlay(pitch_Gb5, 1); //8f#
+1529   1              NotePlay(pitch_F5, 1); //8f
+1530   1              NotePlay(pitch_F5, 1); //8f
+1531   1              NotePlay(pitch_Gb5, 1); //8f#
+1532   1              NotePlay(pitch_Ab5, 1); //8g#
+1533   1              NotePlay(pitch_Db5, 2); //c#
+1534   1              NotePlay(pitch_Eb5, 2); //d#
+1535   1              NotePlay(pitch_F5, 4); //2f
+1536   1              NotePlay(pitch_P, 4); //2p
+1537   1              NotePlay(pitch_Ab5, 2); //g#
+1538   1              NotePlay(pitch_Db5, 2); //c#
+1539   1              NotePlay(pitch_P, 1); //8p
+1540   1              NotePlay(pitch_Db6, 2); //c#6
+1541   1              NotePlay(pitch_Bb5, 1); //8a#
+1542   1              NotePlay(pitch_Ab5, 2); //g#
+1543   1              NotePlay(pitch_Db5, 2); //c#
+1544   1              NotePlay(pitch_P, 1); //8p
+1545   1              NotePlay(pitch_Ab5, 2); //g#
+1546   1              NotePlay(pitch_Gb5, 1); //8f#
+1547   1              NotePlay(pitch_F5, 1); //8f
+1548   1              NotePlay(pitch_F5, 1); //8f
+1549   1              NotePlay(pitch_Gb5, 1); //8f#
+1550   1              NotePlay(pitch_Ab5, 1); //8g#
+1551   1              NotePlay(pitch_Db5, 2); //c#
+1552   1              NotePlay(pitch_Eb5, 2); //d#
+1553   1              NotePlay(pitch_Db5, 4); //2c#
+1554   1      }
+1555          
+1556          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1557                  Function:         Notes
+1558          
+1559                  Description:      Each of the muscial notes
+1560          
+1561                  Revisions:
+1562          
+1563          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1564          void NotePlay(int note, int countTime)
+1565          {
+1566   1              RCAP2L    = note;
+1567   1              RCAP2H    = note >> 8; // set the frequency for note
+1568   1              DAC0H = Volume;
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 28  
+
+1569   1              // Play note for countTime length
+1570   1              NoteCheck();
+1571   1              Interrupts_Init();
+1572   1              NoteDelay(countTime*50);
+1573   1              Interrupts_Off();
+1574   1              NoteCheck();
+1575   1      }
+1576          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1577                  Function:         General_Init
+1578          
+1579                  Description:      Initialise ports, watchdog, timers....
+1580          
+1581                  Revisions:
+1582          
+1583          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1584          void General_Init()
+1585          {
+1586   1              WDTCN = 0xde;
+1587   1              WDTCN = 0xad;
+1588   1              SFRPAGE = CONFIG_PAGE;
+1589   1      
+1590   1              P0MDOUT = 0x41;
+1591   1              XBR0      = 0x04;
+1592   1      
+1593   1              P1MDOUT = 0xf0;
+1594   1              P2MDOUT = 0xff;
+1595   1              XBR2 = 0x40;
+1596   1      
+1597   1      
+1598   1              Timer_Init();
+1599   1              Voltage_Reference_Init();
+1600   1              DAC_Init();
+1601   1      
+1602   1              SFRPAGE   = TMR4_PAGE;
+1603   1          TMR4CN    = 0x04;
+1604   1          TMR4CF    = 0x02;
+1605   1          RCAP4L    = 0xC6;
+1606   1          RCAP4H    = 0x06;   // Timer 4 Intial Setting for 2HZ wave (To be changed to 1HZ wave)
+1607   1          
+1608   1      
+1609   1      
+1610   1          SFRPAGE   = TIMER01_PAGE; // UART0 Init
+1611   1          TCON      = 0x40;
+1612   1          TMOD      = 0x20;
+1613   1          CKCON     = 0x10;
+1614   1          TH1       = 0xF6;
+1615   1      
+1616   1          SFRPAGE   = UART0_PAGE;
+1617   1          SCON0     = 0x50;
+1618   1      
+1619   1      
+1620   1      
+1621   1      
+1622   1      
+1623   1      
+1624   1      
+1625   1      
+1626   1      }
+1627          
+1628          /*--------------------------------------------------------------------------------------------------------
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 29  
+
+             -------------
+1629                  Function:         Timer_Init
+1630          
+1631                  Description:      Initialise timer 2 ports and registers
+1632          
+1633                  Revisions:
+1634          
+1635          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1636          void Timer_Init()
+1637          {
+1638   1              SFRPAGE   = TMR2_PAGE;
+1639   1              TMR2CN    = 0x04;
+1640   1              TMR2CF    = 0x08;
+1641   1              RCAP2L    = 0x02;
+1642   1              RCAP2H    = 0x106;      // 90Hz frequency. Calculated by 1/(1/(24.5MHz/8) x (0xFFFF - 0xBE02)) x 1/2 Hz => R
+             -emember two interrupts per cycle
+1643   1      }
+1644          
+1645          
+1646          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1647                  Function:         Voltage_Reference_Init
+1648          
+1649                  Description:      Initialise voltage reference for DAC
+1650                  Revisions:
+1651          
+1652          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1653          void Voltage_Reference_Init()
+1654          {
+1655   1              SFRPAGE   = ADC0_PAGE;
+1656   1              REF0CN    = 0x03; // Turn on internal bandgap reference and output buffer to get 2.4V reference (pg 107
+             - of C8051F120 datasheet)
+1657   1      }
+1658          
+1659          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1660                  Function:         DAC_Init
+1661          
+1662                  Description:      Initialise DAC0. 
+1663          
+1664                  Revisions:
+1665          
+1666          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1667          void DAC_Init()
+1668          {
+1669   1              SFRPAGE   = DAC0_PAGE;
+1670   1              DAC0CN    = 0x9C; // Enable DAC0, data format ""Most" 2nd change" significant orientation, DAC output, 
+             -Timer 2 overflow
+1671   1              DAC0L           = 0x00;
+1672   1              DAC0H           = 0x00;
+1673   1      }
+1674          
+1675          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1676                  Function:         Interrupts_Init
+1677          
+1678                  Description:      Initialise interrupts
+1679          
+1680                  Revisions:
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 30  
+
+1681          
+1682          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1683          void Interrupts_Init()
+1684          {
+1685   1              IE        = 0xA0;
+1686   1              
+1687   1      }
+1688          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1689                  Function:         Interrupts_Off
+1690          
+1691                  Description:      Turn off interrupts
+1692          
+1693                  Revisions:
+1694          
+1695          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1696          void Interrupts_Off()
+1697          {
+1698   1              IE        = 0x00;
+1699   1      }
+1700          
+1701          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1702                  Function:         Timer2_ISR
+1703          
+1704                  Description:      Timer 2 interrupt service routine
+1705          
+1706                  Revisions:
+1707          
+1708          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1709          void Timer2_ISR (void) interrupt 5
+1710          {
+1711   1        unsigned char SFRPAGE_SAVE = SFRPAGE;       // Save Current SFR page
+1712   1      
+1713   1        SFRPAGE   = DAC0_PAGE;
+1714   1              if (DAC0H == Volume)                                                                                            // Toggle DAC output
+1715   1                      DAC0H = 0x00;
+1716   1              else
+1717   1                      DAC0H = Volume; 
+1718   1      
+1719   1              TF2 = 0;        // Reset Interrupt
+1720   1        SFRPAGE = SFRPAGE_SAVE;                                                             // Restore SFR page
+1721   1      }
+1722          
+1723          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1724                  Function:         Timer4_ISR
+1725          
+1726                  Description:      Timer 4 interrupt service routine for playing SSD in play mode
+1727          
+1728                  Revisions:
+1729          
+1730          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1731          void Timer4_ISR (void) interrupt 16
+1732          {
+1733   1        
+1734   1        if (count <= 2)
+1735   1        {
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 31  
+
+1736   2              count--;
+1737   2        }
+1738   1        if (count == 0)
+1739   1        {
+1740   2              
+1741   2              LetterCheckSSD(j);
+1742   2              TRIG = 1;
+1743   2              P2 =  Letter2; // First letter for scrolling in Play 
+1744   2              LetterCheckSSD(j+1);
+1745   2              TRIG = 0;
+1746   2              P2 = Letter2;
+1747   2              j++;
+1748   2      
+1749   2      
+1750   2              
+1751   2              count = 2;
+1752   2        }
+1753   1              TF4 = 0;                
+1754   1      }
+1755          
+1756          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1757                  Function:         Delay
+1758          
+1759                  Description:      Delay using timers
+1760          
+1761                  Revisions:
+1762          
+1763          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1764          void Delay(unsigned int i)
+1765           
+1766          {                       
+1767   1               int c=0; // local counter variable
+1768   1      
+1769   1           while(c<i)
+1770   1           {
+1771   2                      
+1772   2                      
+1773   2              TMOD=0x01;
+1774   2              TH0=0xFC;
+1775   2              TL0=0x66;
+1776   2              TR0= 1;
+1777   2              while(!TF0); // var = 1, in ISR make var 0
+1778   2                TR0=0;
+1779   2                      TF0=0;
+1780   2                      c++;
+1781   2           }
+1782   1       
+1783   1      }
+1784          
+1785          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1786                  Function:         Note Methods
+1787          
+1788                  Description:      Delay using timers, Note check for buttons
+1789          
+1790                  Revisions:
+1791          
+1792          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1793          void NoteDelay(unsigned int i)
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 32  
+
+1794           
+1795          {                       
+1796   1               int c=0; // local counter variable
+1797   1      
+1798   1           while(c<i)
+1799   1           {
+1800   2              TMOD=0x01;
+1801   2              TH0=0xFC;
+1802   2              TL0=0x66;
+1803   2              TR0= 1;
+1804   2              while(!TF0); // var = 1, in ISR make var 0
+1805   2                TR0=0;
+1806   2                      TF0=0;
+1807   2                      c++;
+1808   2           }
+1809   1       
+1810   1      }
+1811          
+1812          void NoteCheck()
+1813          {
+1814   1              if(S1 == 0)
+1815   1              {       
+1816   2                      button_debounce();      // temp button debounce 
+1817   2                      VolumeControl(1); // volume down 
+1818   2              }
+1819   1              if(S2 == 0)
+1820   1              {       
+1821   2                      button_debounce();                      
+1822   2                      VolumeControl(0); // volume up 
+1823   2              }
+1824   1              if(S3 == 0)
+1825   1              {       
+1826   2                      button_debounce();      
+1827   2                      State(2); // Pause State 
+1828   2              }
+1829   1              if(S4 == 0)
+1830   1              {               
+1831   2                      button_debounce();              
+1832   2                      State(1); // Stop 
+1833   2              }
+1834   1      }
+1835          
+1836          /*--------------------------------------------------------------------------------------------------------
+             -------------
+1837                  Function:         Button_debounce
+1838          
+1839                  Description:      Button debouncer
+1840                  Revisions:
+1841          
+1842          ----------------------------------------------------------------------------------------------------------
+             -----------*/
+1843          int button_debounce()
+1844          {
+1845   1              
+1846   1      
+1847   1      
+1848   1              buttonCount = (Lock_Input_Time_MSEC / check_msec);      
+1849   1              
+1850   1              while ((S1 == 0)&&(buttonCount>0))
+1851   1              {
+1852   2                      Delay(check_msec);
+1853   2                      buttonCount--;
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 33  
+
+1854   2              }
+1855   1              buttonCount = Lock_Input_Time_MSEC / check_msec;
+1856   1              while ((S2 == 0)&&(buttonCount>0))
+1857   1              {
+1858   2                      Delay(check_msec);
+1859   2                      buttonCount--;
+1860   2              }
+1861   1              buttonCount = Lock_Input_Time_MSEC / check_msec;
+1862   1              while ((S3 == 0)&&(buttonCount>0))
+1863   1              {
+1864   2                      Delay(check_msec);
+1865   2                      buttonCount--;
+1866   2              }
+1867   1              buttonCount = Lock_Input_Time_MSEC / check_msec;
+1868   1              while ((S4 == 0)&&(buttonCount>0))
+1869   1              {
+1870   2                      Delay(check_msec);
+1871   2                      buttonCount--;
+1872   2              }
+1873   1      
+1874   1                      
+1875   1      }
+1876          // I got a feeling
+1877          /*G1,A1,G1,C2,B1,G1,G1,C2,B1,A1,G1,E1,E1,C2,B1,G1,G1,C2,B1,A1,G1,E1,E1,D2,B1,G1,G1,D2,B1,A1,G1,E1,E1,D2,D2
+             -,B1,A1,G1,RESTS,0,231,215,211,211,3084,143,313,475,214,249,462,204,300,439,829,178,264,466,241,227,486,198,291,493,846,2
+             -04,289,468,239,218,472,237,242,460,500,440,238,*/
+1878          
+1879          //Can't get you out of my head
+1880          //A1,B1,C2,B1,A1,B1,A1,C2,A1,G1,A1,B1,B1,A1,B1,C2,B1,A1,A1,A1,B1,C2,B1,A1,B1,A1,C2,A1,G1,A1,B1,B1,A1,B1,C2
+             -,B1,A1,A1,C2,C2,C2,C2,C2,C2,C2,D2,B1,B1,B1,B1,B1,B1,B1,A1,C2,C2,C2,C2,C2,C2,C2,D2,B1,B1,B1,B1,B1,B1,B1,A1,RESTS,0,573,60
+             -8,635,413,359,396,477,644,1157,672,593,643,398,381,677,693,408,365,728,621,691,672,382,382,417,443,847,1262,597,608,713,
+             -374,404,752,824,407,415,1979,644,527,905,474,516,369,708,716,663,549,932,501,560,381,648,774,621,571,941,525,526,382,635
+             -,679,607,595,884,539,559,380,722,
+1881          
+1882          //Itchy and scratchy
+1883          //G1,E1,G1,E2,G1,E1,G1,E1,G1,E2,G1,A1,B1,B1,C2,D2,A1,G1,A1,C2,F2,E2,G2,RESTS,0,536,954,573,883,489,417,478
+             -,477,560,1288,513,453,919,633,477,1134,454,464,822,609,816,869,
+1884          
+1885          
+1886          //Impossible by James Arthur
+1887          //F2,G2,C2,D#2,D#2,D#2,F2,G2,C2,D#2,D#2,D#2,F2,G2,C2,D#2,D2,C2,D2,F2,G2,C2,D#2,D#2,D#2,F2,G2,C2,D#2,D#2,D#
+             -2,F2,G2,C2,D#2,D#2,D#2,F2,G2,C2,D#2,D2,D2,F2,G2,C2,D#2,D#2,D#2,C2,C2,D#2,G2,G2,F2,D#2,D2,C2,C2,D#2,G2,G2,F2,D#2,D2,C2,C2
+             -,D#2,G2,F2,D#2,D2,C2,A#1,A#1,D2,F2,D#2,RESTS,0,273,273,273,273,545,545,273,273,273,273,545,545,273,273,273,273,410,136,5
+             -45,273,273,273,273,545,545,273,273,273,273,545,545,273,273,273,273,545,545,273,273,273,273,545,545,273,273,273,273,545,5
+             -45,273,273,273,273,410,136,410,136,273,273,273,273,410,136,410,136,273,273,273,273,410,136,410,136,273,273,273,273,2182
+1888          
+1889          //Star Wars
+1890          //C1,C1,C1,F1,C2,A#1,A1,G1,F2,C2,A#1,A1,G1,F2,C2,A#1,A1,A#1,G1,C1,C1,C1,F1,C2,A#1,A1,G1,F2,C2,A#1,A1,G1,F2
+             -,C2,D#2,D2,D#2,C2,RESTS,0,175,127,278,1168,572,209,197,246,1176,552,201,181,283,1155,580,183,185,236,1784,176,162,275,11
+             -62,583,215,180,254,1092,546,219,194,291,1176,581,218,171,235,
+*** WARNING C290 IN LINE 1875 OF A3_XX.c: missing return value
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   6434    ----
+   CONSTANT SIZE    =   3222    ----
+   XDATA SIZE       =   ----     598
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     51      33
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+C51 COMPILER V9.06   A3_XX                                                                 06/06/2013 17:45:54 PAGE 34  
+
+
+C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)
